@@ -1,0 +1,30 @@
+<form class="formulario" (ngSubmit)="guardar()">
+  <input name="titulo" [(ngModel)]="titulo" placeholder="Título" autocomplete="off" />
+  <input name="contenido" [(ngModel)]="contenido" placeholder="Escribe tu nota..." autocomplete="off" />
+  <button type="submit" [disabled]="!titulo.trim() || !contenido.trim()">Guardar</button>
+</form>
+
+@if (notaService.error()) {
+  <p class="error">{{ notaService.error() }}</p>
+}
+
+<section class="lista">
+  @for (nota of notaService.notas(); track nota.id) {
+    <article class="nota" tabindex="0" (click)="abrir(nota)" (keydown.enter)="abrir(nota)">
+      <h3>{{ nota.titulo }}</h3>
+      <p>{{ nota.contenido }}</p>
+    </article>
+  } @empty {
+    <p class="vacio">Aún no hay notas. ¡Crea la primera!</p>
+  }
+</section>
+
+@if (notaAbierta(); as nota) {
+  <div class="fondo" (click)="cerrar()">
+    <div class="modal" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <button class="cerrar" type="button" (click)="cerrar()" aria-label="Cerrar">✕</button>
+      <h2>{{ nota.titulo }}</h2>
+      <p>{{ nota.contenido }}</p>
+    </div>
+  </div>
+}
